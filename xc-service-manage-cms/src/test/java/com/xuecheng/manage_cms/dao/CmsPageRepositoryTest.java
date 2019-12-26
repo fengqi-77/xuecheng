@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -74,6 +76,36 @@ public class CmsPageRepositoryTest {
             CmsPage save = cmsPageRepository.save(cmsPage);
             System.out.println(save);
         }
+
+
+
+    }
+
+    //多条件查询
+    @Test
+    public void manyFind() {
+
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        CmsPage cmsPage = new CmsPage();
+
+        cmsPage.setPageAliase("课程");
+        //cmsPage.setPageWebPath("/coursepre/");
+        //条件匹配器
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching()
+                .withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+
+        //ExampleMatcher.GenericPropertyMatchers.contains() 包含关键字
+//        ExampleMatcher.GenericPropertyMatchers.startsWith()//前缀匹配
+        //不加选择器默认全字符匹配
+
+        Example<CmsPage> of = Example.of(cmsPage, exampleMatcher);
+        Page<CmsPage> all = cmsPageRepository.findAll(of, pageRequest);
+        List<CmsPage> content = all.getContent();
+        int number = all.getNumber();
+        System.out.println(number);
 
 
 
