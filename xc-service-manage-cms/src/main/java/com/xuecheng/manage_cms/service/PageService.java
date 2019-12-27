@@ -2,6 +2,7 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -10,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PageService {
@@ -44,7 +47,7 @@ public class PageService {
         if (StringUtils.isNotEmpty(queryPageRequest.getTemplateId())){
             cmsPage.setTemplateId(queryPageRequest.getTemplateId());
         }
-
+        //创建条件实例
         Example<CmsPage> of = Example.of(cmsPage, exampleMatcher);
 
         //分页参数
@@ -65,5 +68,31 @@ public class PageService {
         QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);
 
         return queryResponseResult;
+    }
+
+
+    public CmsPageResult addCmsPage(CmsPage cmsPage){
+        if(cmsPage == null){
+           cmsPage = new CmsPage();
+        }
+        //校验页面是否存在，根据页面名称、站点Id、页面webpath查询
+
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching();
+        CmsPage queryCmsPage = new CmsPage();
+        queryCmsPage.setSiteId(cmsPage.getSiteId());
+        queryCmsPage.setPageName(cmsPage.getPageName());
+        queryCmsPage.setPageWebPath(cmsPage.getPageWebPath());
+        Example<CmsPage> of = Example.of(queryCmsPage, exampleMatcher);
+        List<CmsPage> all = cmsPageRepository.findAll(of);
+
+        //不存在添加
+        if (all.size()==0){
+            cmsPageRepository.save(cmsPage);
+            return  new CmsPageResult(CommonCode.SUCCESS,cmsPage);
+        }
+        //存在不添加
+        return new CmsPageResult(CommonCode.FAIL,null);
+
+
     }
 }

@@ -110,4 +110,27 @@ public class CmsPageRepositoryTest {
 
 
     }
+    //多条件不分页查询
+    @Test
+    public void manyNoPageFind() {
+
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setPageName("index.html");
+        cmsPage.setSiteId("5a751fab6abb5044e0d19ea1");
+        cmsPage.setPageWebPath("/index.html");
+
+        //条件匹配器
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching();
+        //不加选择器默认全字符匹配
+
+        Example<CmsPage> of = Example.of(cmsPage, exampleMatcher);
+        List<CmsPage> all = cmsPageRepository.findAll(of);
+
+        System.out.println(all);
+
+
+
+    }
+
+
 }
