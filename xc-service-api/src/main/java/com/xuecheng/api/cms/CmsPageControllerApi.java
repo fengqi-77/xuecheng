@@ -4,11 +4,11 @@ import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Created by HP on 2019-12-20.
@@ -24,5 +24,15 @@ public interface CmsPageControllerApi {
     public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
 
     @ApiOperation("添加CMS页面")
-    public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage);
+    public CmsPageResult addCmsPage(CmsPage cmsPage);
+
+    @ApiOperation("根据id查询CMS页面")
+    public CmsPage findById(String id);
+
+
+    @ApiOperation("根据id修改CMS页面")
+    public CmsPageResult edit(String id,CmsPage cmsPage);
+
+    @ApiOperation("根据id删除CMS页面")
+    public ResponseResult del(String id);
 }
