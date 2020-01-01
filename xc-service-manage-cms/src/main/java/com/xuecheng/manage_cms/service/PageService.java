@@ -2,7 +2,9 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -170,14 +172,13 @@ public class PageService {
         //先判读id能否查询到页面
         //先查询page页面是否存在
         CmsPage one = this.findById(id);
-        if (one != null) {
-            //能删除
-            cmsPageRepository.deleteById(id);
-            return new ResponseResult(CommonCode.SUCCESS);
+        if (one == null) {
+            //不存在抛出异常
+            ExceptionCast.cast(CmsCode.CMS_COURSE_DATAERROR);
         }
-        //不存在返回null
-        return new ResponseResult(CommonCode.FAIL);
-
+        //能删除
+        cmsPageRepository.deleteById(id);
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 
 }
